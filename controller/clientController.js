@@ -1,7 +1,7 @@
-const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
 // @desc User register
 // @route POST /client/register
@@ -23,7 +23,7 @@ const userRegister = asyncHandler(async (req, res) => {
     if (emailDuplicated)
         return res.status(409).json({ message: "Duplicate email" });
 
-    const hashPwd = await bcrypt(password, 10);
+    const hashPwd = await bcrypt.hash(password, 10);
 
     const userObject = { username, password: hashPwd, email };
 
