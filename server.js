@@ -29,6 +29,7 @@ app.use("/", require("./routes/root"));
 app.use("/client", require("./routes/clientRoutes"));
 app.use("/users", require("./routes/usersRoutes"));
 app.use("/books", require("./routes/bookRoutes"));
+app.use("/cart", require("./routes/cartRoutes"));
 
 app.use(errorHandler);
 

@@ -7,12 +7,22 @@ const bcrypt = require("bcrypt");
 // @route POST /client/register
 // @access Public
 const userRegister = asyncHandler(async (req, res) => {
-    const { username, password, againPassword, email } = req.body;
+    const { username, password, matchPassword, email } = req.body;
 
-    if (!username || !password || !againPassword || !email)
+    if (!username || !password || !matchPassword || !email)
         return res.status(400).json({ message: "All fields are required" });
 
-    if (password !== againPassword)
+    if (username.length < 8)
+        return res
+            .status(400)
+            .json({ message: "Username length must be greater than 8" });
+
+    if (password.length < 8)
+        return res
+            .status(400)
+            .json({ message: "Password length must be greater than 8" });
+
+    if (password !== matchPassword)
         return res.status(400).json({ message: "Password is different" });
 
     const usernameDuplicated = await User.findOne({ username }).lean().exec();
@@ -59,6 +69,7 @@ const userLogin = asyncHandler(async (req, res) => {
     const accessToken = jwt.sign(
         {
             UserInfo: {
+                userId: foundUser._id,
                 username: foundUser.username,
                 roles: foundUser.roles,
             },
@@ -114,6 +125,7 @@ const userRefresh = asyncHandler(async (req, res) => {
             const accessToken = jwt.sign(
                 {
                     UserInfo: {
+                        userId: foundUser._id,
                         username: foundUser.username,
                         roles: foundUser.roles,
                     },
