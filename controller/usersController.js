@@ -29,7 +29,7 @@ const createNewUser = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: "All fields are required" });
     }
 
-    const usernameDuplicated = await User.findOne({ username }).lean().exec();
+    const usernameDuplicated = await User.findOne({ username }).exec();
     if (usernameDuplicated) {
         return res.status(409).json({ message: "Duplicate username" });
     }

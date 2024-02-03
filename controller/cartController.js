@@ -11,20 +11,19 @@ const getCart = asyncHandler(async (req, res) => {
 
     const cart = await Cart.findOne({ userId }).populate("bookList.book", [
         "bookname",
-        "imgSrc",
         "price",
         "bookId",
+        "imgSrc",
     ]);
 
     if (!cart) return res.status(400).json({ message: "User is not found" });
 
     const formattedCartData = cart.bookList.map((cart) => ({
-        book: cart.book,
+        book: cart.book._id,
         active: cart.active,
         bookname: cart.book.bookname,
         price: cart.book.price,
         quantity: cart.quantity,
-        totalPrice: cart.totalPrice,
         imgSrc: cart.book.imgSrc,
         bookId: cart.book.bookId,
     }));
@@ -32,7 +31,7 @@ const getCart = asyncHandler(async (req, res) => {
     res.json(formattedCartData);
 });
 
-// @desc create cart
+// @desc update cart
 // @route POST /cart
 // @access Private
 const updateBookInCart = asyncHandler(async (req, res) => {

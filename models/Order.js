@@ -7,24 +7,20 @@ const orderSchema = new mongoose.Schema(
             ref: "User",
         },
 
-        orderId: {
-            type: String,
-            required: true,
-            unique: true,
-        },
-
-        deliveryStatus: {
+        orderStatus: {
             type: String,
             required: true,
             default: "訂單已建立",
         },
 
+        deliveryStatus: {
+            type: String,
+            required: true,
+            default: "待出貨",
+        },
+
         bookList: [
             {
-                active: {
-                    type: Boolean,
-                    required: true,
-                },
                 book: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Book",
@@ -34,12 +30,14 @@ const orderSchema = new mongoose.Schema(
                     type: Number,
                     required: true,
                 },
-                totalPrice: {
-                    type: Number,
-                    required: true,
-                },
             },
         ],
+
+        isDone: {
+            type: Boolean,
+            required: true,
+            default: false,
+        },
     },
     { timestamps: true }
 );

@@ -62,6 +62,7 @@ const updateBook = asyncHandler(async (req, res) => {
         !author ||
         !publishYear ||
         !summary ||
+        !imgSrc ||
         !Array.isArray(type) ||
         !type.length
     ) {
@@ -79,6 +80,7 @@ const updateBook = asyncHandler(async (req, res) => {
     book.publishYear = publishYear;
     book.summary = summary;
     book.type = type;
+    book.imgSrc = imgSrc;
 
     const updatedBook = await book.save();
 
