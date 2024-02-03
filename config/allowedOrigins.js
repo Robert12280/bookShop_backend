@@ -1,3 +1,3 @@
-const allowedOrigins = ["http://127.0.0.1:3000", "http://localhost:3000"];
+const allowedOrigins = ["https://bookshop-2ymh.onrender.com"];
 
 module.exports = allowedOrigins;
