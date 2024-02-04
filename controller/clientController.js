@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Cart = require("../models/Cart");
 const bcrypt = require("bcrypt");
 
 // @desc User register
@@ -39,7 +40,24 @@ const userRegister = asyncHandler(async (req, res) => {
 
     const user = await User.create(userObject);
     if (user) {
-        res.status(201).json({ message: `New user ${username} created` });
+        const cartObject = {
+            userId: user._id,
+            bookList: [],
+        };
+
+        // create new cart
+        const newCart = await Cart.create(cartObject);
+        if (newCart) {
+            res.status(201).json({ message: "New cart is created" });
+        } else {
+            res.status(400).json({ message: "Invalid cart data received" });
+        }
+
+        if (newCart) {
+            res.status(201).json({ message: `New user ${username} created` });
+        } else {
+            res.status(500).json({ message: "Create cart fail" });
+        }
     } else {
         res.status(400).json({ message: "Invalid user data received" });
     }

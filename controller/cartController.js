@@ -47,18 +47,6 @@ const updateBookInCart = asyncHandler(async (req, res) => {
         const updatedCart = await cart.save();
 
         res.json({ message: `Cart of "${updatedCart.userId}" is update` });
-    } else {
-        const cartObject = {
-            userId,
-            bookList,
-        };
-
-        const newCart = await Cart.create(cartObject);
-        if (newCart) {
-            res.status(201).json({ message: "New cart is created" });
-        } else {
-            res.status(400).json({ message: "Invalid cart data received" });
-        }
     }
 });
 
