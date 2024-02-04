@@ -15,7 +15,7 @@ router
 
 router.patch(
     "/:orderId",
-    verifyRoles(ROLES_LIST.Admin),
+    verifyRoles(ROLES_LIST.Admin, ROLES_LIST.Editor),
     orderController.updateOrder
 );
 

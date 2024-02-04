@@ -32,7 +32,7 @@ const getCart = asyncHandler(async (req, res) => {
 });
 
 // @desc update cart
-// @route POST /cart
+// @route PATCH /cart
 // @access Private
 const updateBookInCart = asyncHandler(async (req, res) => {
     const userId = req.userId;

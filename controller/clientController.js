@@ -118,7 +118,7 @@ const userLogin = asyncHandler(async (req, res) => {
 
 // @desc User refresh
 // @route GET /client/refresh
-// @access Private
+// @access Public
 const userRefresh = asyncHandler(async (req, res) => {
     const cookies = req.cookies;
 
@@ -161,7 +161,7 @@ const userRefresh = asyncHandler(async (req, res) => {
 
 // @desc user logout
 // @route POST /client/logout
-// @access Private
+// @access Public
 const userLogout = asyncHandler(async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(204);

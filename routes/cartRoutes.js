@@ -9,6 +9,6 @@ router.use(verifyJWT);
 router
     .route("/")
     .get(cartController.getCart)
-    .post(cartController.updateBookInCart);
+    .patch(cartController.updateBookInCart);
 
 module.exports = router;
