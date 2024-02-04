@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Cart = require("../models/Cart");
 
 const userSchema = new mongoose.Schema(
     {
@@ -29,5 +30,14 @@ const userSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+
+userSchema.pre("deleteOne", async function (next) {
+    try {
+        await Cart.deleteMany({ userId: this.getQuery()._id });
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
 
 module.exports = mongoose.model("User", userSchema);
