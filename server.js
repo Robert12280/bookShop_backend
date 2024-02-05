@@ -8,12 +8,18 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/dbConn");
+const client = require("./config/redisConn");
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 3500;
+let isRedisConn = false;
 
 console.log(process.env.NODE_ENV);
 
 connectDB();
+
+if (!client.isOpen) {
+    client.connect();
+}
 
 app.use(logger);
 
@@ -34,11 +40,19 @@ app.use("/order", require("./routes/orderRoutes"));
 
 app.use(errorHandler);
 
+client.on("error", (err) => console.log("Redis Client Error", err));
+
+client.on("ready", () => {
+    console.log("Connected on Redis");
+    isRedisConn = true;
+});
+
 mongoose.connection.once("open", () => {
     console.log("Connected on MongoDB");
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-    });
+    if (isRedisConn)
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
 });
 
 mongoose.connection.on("error", (err) => {

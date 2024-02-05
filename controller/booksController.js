@@ -1,16 +1,32 @@
 const Book = require("../models/Book");
 const asyncHandler = require("express-async-handler");
+const client = require("../config/redisConn");
+
+const DEFAULT_EXPIRATION = 3600;
 
 // @desc Get all books
 // @route GET /books
 // @access Private
 const getAllBooks = asyncHandler(async (req, res) => {
-    const books = await Book.find().lean();
+    const books = await getOrSetCache("books", async () => {
+        const data = await Book.find().lean();
+        return data;
+    });
+
     if (!books?.length) {
         res.status(400).json({ message: "Not books found" });
     }
     res.json(books);
 });
+
+const getOrSetCache = async (key, callback) => {
+    const response = await client.get(key);
+    if (response) return JSON.parse(response);
+    const freshData = await callback();
+    client.setEx(key, DEFAULT_EXPIRATION, JSON.stringify(freshData));
+
+    return freshData;
+};
 
 // @desc Create new book
 // @route POST /books
