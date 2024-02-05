@@ -4,7 +4,7 @@
 
 ## 描述
 
-運用 Express 框架開發後端 API ，使用 middleware 驗證身份(JWT)，並區分使用者角色(Admin, Editor, customer)限制 API 呼叫，資料庫使用 MongoDB，使用 Mongoose 庫控制。
+運用 Express 框架開發後端 API ，使用 middleware 驗證身份(JWT)，並區分使用者角色(Admin, Editor, customer)限制 API 呼叫，資料庫使用 MongoDB，使用 Mongoose 庫控制，還有使用 Redis 將書籍資訊儲存在 cache。
 
 ## API
 
