@@ -7,11 +7,12 @@ const userSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
-            minLength: [8, "Password should be greater than 8 characters"],
+        },
+        googleId: {
+            type: String,
         },
         password: {
             type: String,
-            required: true,
             minLength: [8, "Password should be greater than 8 characters"],
         },
         email: {

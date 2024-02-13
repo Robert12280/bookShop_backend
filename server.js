@@ -10,8 +10,9 @@ const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/dbConn");
 const client = require("./config/redisConn");
 const mongoose = require("mongoose");
+const passport = require("passport");
+require("./config/passportSetup");
 const PORT = process.env.PORT || 3500;
-let isRedisConn = false;
 
 console.log(process.env.NODE_ENV);
 
@@ -25,6 +26,8 @@ app.use(logger);
 
 app.use(express.json());
 
+app.use(passport.initialize());
+
 app.use(cookieParser());
 
 app.use(cors(corsOptions));
@@ -32,7 +35,7 @@ app.use(cors(corsOptions));
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.use("/", require("./routes/root"));
-app.use("/client", require("./routes/clientRoutes"));
+app.use("/auth", require("./routes/authRoutes"));
 app.use("/users", require("./routes/usersRoutes"));
 app.use("/books", require("./routes/bookRoutes"));
 app.use("/cart", require("./routes/cartRoutes"));
@@ -44,15 +47,13 @@ client.on("error", (err) => console.log("Redis Client Error", err));
 
 client.on("ready", () => {
     console.log("Connected on Redis");
-    isRedisConn = true;
 });
 
 mongoose.connection.once("open", () => {
     console.log("Connected on MongoDB");
-    if (isRedisConn)
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
 });
 
 mongoose.connection.on("error", (err) => {

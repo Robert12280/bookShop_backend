@@ -5,9 +5,9 @@ const Cart = require("../models/Cart");
 const bcrypt = require("bcrypt");
 
 // @desc User register
-// @route POST /client/register
+// @route POST /auth/register
 // @access Public
-const userRegister = asyncHandler(async (req, res) => {
+const register = asyncHandler(async (req, res) => {
     const { username, password, matchPassword, email } = req.body;
 
     if (!username || !password || !matchPassword || !email)
@@ -48,15 +48,9 @@ const userRegister = asyncHandler(async (req, res) => {
         // create new cart
         const newCart = await Cart.create(cartObject);
         if (newCart) {
-            res.status(201).json({ message: "New cart is created" });
+            res.status(201).json({ message: "New user ${username} created" });
         } else {
-            res.status(400).json({ message: "Invalid cart data received" });
-        }
-
-        if (newCart) {
-            res.status(201).json({ message: `New user ${username} created` });
-        } else {
-            res.status(500).json({ message: "Create cart fail" });
+            res.status(400).json({ message: "Create cart fail" });
         }
     } else {
         res.status(400).json({ message: "Invalid user data received" });
@@ -64,9 +58,9 @@ const userRegister = asyncHandler(async (req, res) => {
 });
 
 // @desc User login
-// @route POST /client/login
+// @route POST /auth/login
 // @access Public
-const userLogin = asyncHandler(async (req, res) => {
+const login = asyncHandler(async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
@@ -94,7 +88,7 @@ const userLogin = asyncHandler(async (req, res) => {
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
-            expiresIn: "1d",
+            expiresIn: "1m",
         }
     );
 
@@ -117,9 +111,9 @@ const userLogin = asyncHandler(async (req, res) => {
 });
 
 // @desc User refresh
-// @route GET /client/refresh
+// @route GET /auth/refresh
 // @access Public
-const userRefresh = asyncHandler(async (req, res) => {
+const refresh = asyncHandler(async (req, res) => {
     const cookies = req.cookies;
 
     if (!cookies?.jwt) {
@@ -160,13 +154,33 @@ const userRefresh = asyncHandler(async (req, res) => {
 });
 
 // @desc user logout
-// @route POST /client/logout
+// @route POST /auth/logout
 // @access Public
-const userLogout = asyncHandler(async (req, res) => {
+const logout = asyncHandler(async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(204);
     res.clearCookie("jwt", { httpOnly: true, secure: true, sameSite: "None" });
     res.json({ message: "Cookie cleared" });
 });
 
-module.exports = { userRegister, userLogin, userRefresh, userLogout };
+// @desc get google callback
+// @route GET /auth/google/callback
+// @access Private
+const googleCallback = (req, res) => {
+    const { user } = req;
+    const refreshToken = jwt.sign(
+        { username: user.username },
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: "1d",
+        }
+    );
+    res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.redirect(`${process.env.APP_URI}`);
+};
+module.exports = { register, login, refresh, logout, googleCallback };

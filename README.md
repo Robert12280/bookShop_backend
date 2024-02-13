@@ -2,11 +2,25 @@
 
 網站連結：[bookShop](https://bookshop-8u9l.onrender.com)
 
-## 描述
+## 技術說明
 
-運用 Express 框架開發後端 API ，使用 middleware 驗證身份(JWT)，並區分使用者角色(Admin, Editor, customer)限制 API 呼叫，資料庫使用 MongoDB，使用 Mongoose 庫控制，還有使用 Redis 將書籍資訊儲存在 cache。
+### 後端
 
-## API
+-   框架：`Node.js Express`
+-   `RESTful API` & `MVC` 架構
+-   `Google OAuth 2.0` & `JWT`
+-   `Roles auth`：達到身份驗證
+
+### 資料庫
+
+-   `MongoDB`：使用 NoSQL 達到更高效查詢，且增加擴展性。
+-   `Redis`：書籍預載快取，達到更高效能
+
+### 部署
+
+-   `Render`進行部署
+
+### API
 
 -   /users (Access：Admin only)
     -   管理使用者 CRUD
@@ -15,7 +29,7 @@
     -   post: 新增書籍 (Access：Editor, Admin)
     -   patch: 修改書籍資訊 (Access：Editor, Admin)
     -   delete: 刪除書籍 (Access：Editor, Admin)
--   /client
+-   /auth
     -   post /register: 註冊 (Access：Public)
     -   post /login: 登入 (Access：Public)
     -   post /logout: 登出 (Access：Public)
@@ -27,3 +41,7 @@
     -   get: 取得登入 user 的訂單
     -   post: 建立新訂單
     -   patch: 修該訂單資訊 (Access：Editor, Admin)
+
+### 資料庫架構
+
+![bookShopSchema](./readme//bookShopSchema.png)
