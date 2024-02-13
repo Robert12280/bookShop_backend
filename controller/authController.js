@@ -93,7 +93,7 @@ const login = asyncHandler(async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-        { username: foundUser.username },
+        { email: foundUser.email },
         process.env.REFRESH_TOKEN_SECRET,
         {
             expiresIn: "1d",
@@ -129,7 +129,7 @@ const refresh = asyncHandler(async (req, res) => {
             if (err) return res.status(403).json({ message: "Forbidden" });
 
             const foundUser = await User.findOne({
-                username: decoded.username,
+                email: decoded.email,
             }).exec();
             if (!foundUser)
                 return res.status(401).json({ message: "Unauthorized" });
@@ -138,7 +138,9 @@ const refresh = asyncHandler(async (req, res) => {
                 {
                     UserInfo: {
                         userId: foundUser._id,
-                        username: foundUser.username,
+                        username: foundUser.username
+                            ? foundUser.username
+                            : foundUser.name,
                         roles: foundUser.roles,
                     },
                 },
@@ -169,7 +171,7 @@ const logout = asyncHandler(async (req, res) => {
 const googleCallback = (req, res) => {
     const { user } = req;
     const refreshToken = jwt.sign(
-        { username: user.username },
+        { email: user.email },
         process.env.REFRESH_TOKEN_SECRET,
         {
             expiresIn: "1d",

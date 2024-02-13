@@ -18,7 +18,7 @@ passport.use(
                 return done(null, user);
             } else {
                 const userObject = {
-                    username: profile.displayName,
+                    name: profile.displayName,
                     googleId: profile.id,
                     email: profile.emails[0].value,
                 };

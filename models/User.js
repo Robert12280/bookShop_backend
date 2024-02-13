@@ -5,10 +5,11 @@ const userSchema = new mongoose.Schema(
     {
         username: {
             type: String,
-            required: true,
-            unique: true,
         },
         googleId: {
+            type: String,
+        },
+        name: {
             type: String,
         },
         password: {
@@ -22,7 +23,7 @@ const userSchema = new mongoose.Schema(
         },
         roles: {
             type: [String],
-            default: ["customer"],
+            default: ["Customer"],
         },
         active: {
             type: Boolean,
