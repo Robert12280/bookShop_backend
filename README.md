@@ -42,6 +42,10 @@
     -   post: 建立新訂單
     -   patch: 修該訂單資訊 (Access：Editor, Admin)
 
+### 系統架構
+
+![architecture](./readme//architecture.png)
+
 ### 資料庫架構
 
 ![bookShopSchema](./readme//bookShopSchema.png)
